@@ -31,6 +31,8 @@ export class UserService {
   }
 
   async updateFieldUser(body: UpdateOneUserDTO, id: number) {
+    await this.findUser(id);
+
     return this.prisma.pessoas.update({ where: { id }, data: body });
   }
 
