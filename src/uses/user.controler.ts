@@ -12,39 +12,56 @@ import {
 import { CreateUserDTO } from './dtos/createUsers.dto';
 import { UpdateUserDTO } from './dtos/updateUser.dto';
 import { UpdateOneUserDTO } from './dtos/updateOneUser.dto';
+import { UserService } from './user.service';
 
 @Controller('users')
 export class userControler {
+  constructor(private readonly userService: UserService) {}
+
   @Post()
   async create(@Body() body: CreateUserDTO) {
+    const createUser = await this.userService.createUser(body);
+
     return {
       method: 'POST',
-      body,
+      message: 'Usuário criado com sucesso!',
+      data: createUser,
     };
   }
 
   @Get()
   async read() {
+    const listUsers = await this.userService.listUsers();
+
     return {
       method: 'GET',
-      users: [],
+      message: 'Usuários listados com sucesso!',
+      users: listUsers,
     };
   }
 
   @Get(':id')
   async readOne(@Param('id', ParseIntPipe) paramId) {
+    const findOne = await this.userService.pickUser(paramId);
+
     return {
       method: 'GET',
-      params: { paramId },
+      message: 'Usuários encontrado com sucesso!',
+      user: findOne,
     };
   }
 
   @Put(':id')
-  async update(@Body() body: UpdateUserDTO, @Param() params) {
+  async update(
+    @Body() body: UpdateUserDTO,
+    @Param('id', ParseIntPipe) paramId,
+  ) {
+    const updatedUser = await this.userService.updateUser(body, paramId);
+
     return {
       method: 'PUT',
-      body,
-      params,
+      message: 'Usuários editado com sucesso!',
+      user: updatedUser,
     };
   }
 
@@ -53,18 +70,23 @@ export class userControler {
     @Body() body: UpdateOneUserDTO,
     @Param('id', ParseIntPipe) paramId,
   ) {
+    const userField = await this.userService.updateFieldUser(body, paramId);
+
     return {
       method: 'PATCH',
-      body,
-      params: { paramId },
+      message: 'Usuários editado com sucesso!',
+      user: userField,
     };
   }
 
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) paramId) {
+    const deletedUser = await this.userService.deleteUser(paramId);
+
     return {
       method: 'DELETE',
-      params: { paramId },
+      message: 'Usuários deletado com sucesso!',
+      user: deletedUser,
     };
   }
 }
