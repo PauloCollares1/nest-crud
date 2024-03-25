@@ -43,7 +43,7 @@ export class UserService {
   }
 
   async findUser(id: number) {
-    const findUser = await this.prisma.pessoas.findUnique({ where: { id } });
+    const findUser = await this.prisma.pessoas.count({ where: { id } });
 
     if (!findUser)
       throw new NotFoundException(
