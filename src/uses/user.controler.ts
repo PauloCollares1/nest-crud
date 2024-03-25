@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
-  ParseIntPipe,
   Patch,
   Post,
   Put,
@@ -13,6 +11,8 @@ import { CreateUserDTO } from './dtos/createUsers.dto';
 import { UpdateUserDTO } from './dtos/updateUser.dto';
 import { UpdateOneUserDTO } from './dtos/updateOneUser.dto';
 import { UserService } from './user.service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { paramId } from 'src/decorators/paramIdDecorator';
 
 @Controller('users')
 export class userControler {
@@ -41,7 +41,7 @@ export class userControler {
   }
 
   @Get(':id')
-  async readOne(@Param('id', ParseIntPipe) paramId) {
+  async readOne(@paramId() paramId) {
     const findOne = await this.userService.pickUser(paramId);
 
     return {
@@ -52,10 +52,7 @@ export class userControler {
   }
 
   @Put(':id')
-  async update(
-    @Body() body: UpdateUserDTO,
-    @Param('id', ParseIntPipe) paramId,
-  ) {
+  async update(@Body() body: UpdateUserDTO, @paramId() paramId) {
     const updatedUser = await this.userService.updateUser(body, paramId);
 
     return {
@@ -66,10 +63,7 @@ export class userControler {
   }
 
   @Patch(':id')
-  async updatPatial(
-    @Body() body: UpdateOneUserDTO,
-    @Param('id', ParseIntPipe) paramId,
-  ) {
+  async updatPatial(@Body() body: UpdateOneUserDTO, @paramId() paramId) {
     const userField = await this.userService.updateFieldUser(body, paramId);
 
     return {
@@ -80,7 +74,7 @@ export class userControler {
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) paramId) {
+  async delete(@paramId() paramId) {
     const deletedUser = await this.userService.deleteUser(paramId);
 
     return {
